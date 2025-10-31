@@ -12,7 +12,7 @@ def init_db():
         file_name TEXT UNIQUE,
         url TEXT,
         date TEXT,
-        pref INTEGER
+        pref TEXT
     )
     """)
     c.execute("""
