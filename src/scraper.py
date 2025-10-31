@@ -4,7 +4,6 @@ import sqlite3
 import pandas as pd
 
 import utils_scraping
-import utils_interpreter
 import config
 import manage_db as db
 
@@ -23,21 +22,20 @@ def main():
     if config.DO_TEST_CODE:
         test()
 
-    # 1) récupérer les liens PDF depuis la page RAA
-    if config.DO_SCRAPE_LINKS:
-        print("Récupération des liens PDF depuis la page RAA...")
-        pdf_links = utils_scraping.get_pdf_links(config.START_URL)  # liste d'URLs
-        print(f"{len(pdf_links)} PDF trouvés sur le site (brut).")
+    # 1) récupérer les JSON depuis la recherche Attrap via l'API
+    if config.DO_GET_JSONS:
+        print("Récupération des json depuis l'API Attrap...")
+        utils_scraping.get_pdf_jsons()
 
-    # 2) filtrer ceux >= juillet 2020
-        print(f"Filtrage des PDF depuis {config.FROM_DATE.isoformat()}...")
-        url_date = utils_scraping.filter_links_since(pdf_links, config.FROM_DATE)  # liste de (url, date)
-        print(f"{len(url_date)} PDF identifiés à partir de la date demandée.")
+    # 2) traiter les JSON téléchargés, enregistrement dans la db
+    if config.DO_PROCESS_JSONS:
+        print("Traitement des JSONS...")
+        utils_scraping.process_jsons()
 
-    # 3) télécharger les PDF filtrés
+    # 3) télécharger les PDF des arrêtés
     if config.DO_DOWNLOAD_PDFS:
         print("Téléchargement des PDF...")
-        utils_scraping.download_pdfs(url_date, config.PDF_DIR)
+        utils_scraping.download_pdfs()
 
     # 4) pour chaque PDF : extraire le texte et l'enregistrer dans la db
     if config.DO_EXTRACT_TEXT:
@@ -45,8 +43,8 @@ def main():
         #segments = utils.split_arretes(pages)
 
     # 5) pour chaque page : tester la présence de "vidéo-protection"
-    if config.DO_INTERPRET_TEXT:
-        utils_interpreter.interprete()
+    # if config.DO_INTERPRET_TEXT:
+        # utils_interpreter.interprete()
 
     # 6) exporter les résultats en CSV pour consultation
     # if config.DO_INTERPRET_TEXT:

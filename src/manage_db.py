@@ -7,11 +7,12 @@ def init_db():
     conn = sqlite3.connect(config.DB_PATH)
     c = conn.cursor()
     c.execute("""
-    CREATE TABLE IF NOT EXISTS pdfs (
+    CREATE TABLE IF NOT EXISTS files (
         id INTEGER PRIMARY KEY,
         file_name TEXT UNIQUE,
         url TEXT,
-        date TEXT
+        date TEXT,
+        pref INTEGER
     )
     """)
     c.execute("""
@@ -30,7 +31,7 @@ def get_pdf_id_by_filename(filename):
     conn = sqlite3.connect(config.DB_PATH)
     c = conn.cursor()
 
-    c.execute("SELECT id FROM pdfs WHERE file_name = ?", (filename,))
+    c.execute("SELECT id FROM files WHERE file_name = ?", (filename,))
     result = c.fetchone()
     conn.close()
 
