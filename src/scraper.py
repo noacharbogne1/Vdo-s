@@ -20,17 +20,14 @@ def main():
 
     # 1) récupérer les JSON depuis la recherche Attrap via l'API
     if config.DO_GET_JSONS:
-        print("Récupération des json depuis l'API Attrap...")
         utils_scraping.get_pdf_jsons()
 
     # 2) traiter les JSON téléchargés, enregistrement dans la db
     if config.DO_PROCESS_JSONS:
-        print("Traitement des JSONS...")
         utils_scraping.process_jsons()
 
     # 3) télécharger les PDF des arrêtés
     if config.DO_DOWNLOAD_PDFS:
-        print("Téléchargement des PDF...")
         utils_scraping.download_pdfs()
 
     # 4) pour chaque PDF : extraire le texte et l'enregistrer dans la db

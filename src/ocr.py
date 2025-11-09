@@ -27,6 +27,7 @@ def extract_text_from_pdf(fname, pdf_path):
             tmp_path,
             language="fra",
             skip_text=False,
+            force_ocr=True,
             deskew=True,
             optimize=1,
             progress_bar=False,
@@ -85,21 +86,31 @@ def extraction():
     conn = sqlite3.connect(config.DB_PATH)
     c = conn.cursor()
 
-    c.execute("SELECT id, file_name FROM files")
+    try:
+        c.execute("ALTER TABLE files ADD COLUMN ocr_done INTEGER DEFAULT 0;")
+        conn.commit()
+    except sqlite3.OperationalError:
+        pass
+
+    c.execute("SELECT id, file_name FROM files WHERE ocr_done = 0")
     pdfs = c.fetchall()
-    conn.close()
 
     cpu_total = os.cpu_count()
     max_workers = max(1, cpu_total - 2)
+    print(f"Utilisation {max_workers} processeurs pour l'OCR des PDF")
     total = len(pdfs)
 
     with ProcessPoolExecutor(max_workers=max_workers) as executor:
         futures = {executor.submit(process_one_pdf, pdf): pdf for pdf in pdfs}
         done = 0
         for future in as_completed(futures):
-            _, file_name, nb_pages, success = future.result()
+            pdf_id, file_name, nb_pages, success = future.result()
             done += 1
             if success:
                 print(f"[{done}/{total}] ✅ {file_name} ({nb_pages} pages)")
+                c.execute("UPDATE files SET ocr_done = 1 WHERE id = ?", (pdf_id,))
+                conn.commit()
             else:
                 print(f"[{done}/{total}] ⚠️ {file_name} échoué ou ignoré")
+
+    conn.close()
