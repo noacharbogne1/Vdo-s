@@ -1,11 +1,7 @@
-import os
-
-import sqlite3
-import pandas as pd
-
 import utils_scraping
 import config
 import manage_db as db
+import ocr
 
 def test():
     tests = ["Arrêté n°2024-123",
@@ -39,8 +35,7 @@ def main():
 
     # 4) pour chaque PDF : extraire le texte et l'enregistrer dans la db
     if config.DO_EXTRACT_TEXT:
-        utils_scraping.extraction()
-        #segments = utils.split_arretes(pages)
+        ocr.extraction()
 
     # 5) pour chaque page : tester la présence de "vidéo-protection"
     # if config.DO_INTERPRET_TEXT:

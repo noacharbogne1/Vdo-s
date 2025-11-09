@@ -1,22 +1,16 @@
 import os
-import datetime
 import time
-import re
 import random
 import json
 import math
 
+
 import requests
-import pandas as pd
-from bs4 import BeautifulSoup
-from PyPDF2 import PdfReader
 from urllib.parse import urlparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import ocrmypdf
 import sqlite3
 
 import config
-import manage_db as db
 
 def fetch_page(page):
     """
@@ -143,45 +137,3 @@ def download_pdfs(max_workers=1):
     for i, url in enumerate(urls, 1):
         print(f"➡️ Fichier n°{i} sur {len(urls)} fichiers")
         download_one(url)
-
-def extract_text_from_pdf(fname, pdf_path):
-    """
-    Page par page, tente d'extraire le texte du PDF en testant avec technique OCR
-
-    Retourne: pages_text (list[dict]) : liste des pages sous la forme [{'page': n, 'text': '...'}]
-    """
-    output_path = "Users/noacharbogne/Documents/DataJ/Vidéo-surveillance/data/tmp/" + fname
-    ocrmypdf.ocr(
-        pdf_path,
-        output_path,
-        language="fra",
-        skip_text=True,
-        progress_bar=False
-    )
-
-    reader = PdfReader(output_path)
-    pages_text = []
-    for i, page in enumerate(reader.pages, start=1):
-        page_text = page.extract_text() or ""
-        pages_text.append({"page": i, "text": page_text.strip()})
-    
-    return pages_text
-
-def extraction():
-    conn = sqlite3.connect(config.DB_PATH)
-    c = conn.cursor()
-
-    c.execute("SELECT id, file_name FROM pdfs")
-    pdfs = c.fetchall()
-    for pdf_id, fname in pdfs:
-        local_path = os.path.join(config.PDF_DIR, fname)
-        if not os.path.exists(local_path):
-            print(f"⚠️ PDF {fname} introuvable dans la base — ignoré.")
-            continue
-        print(f"Extraction du texte : {fname}")
-        pages = extract_text_from_pdf(fname, local_path)
-        for page in pages:
-            db.insert_page(pdf_id, page["page"], page["text"])
-        print(f"✅ {len(pages)} pages insérées pour {fname}")
-
-    conn.close()

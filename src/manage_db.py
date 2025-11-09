@@ -21,7 +21,7 @@ def init_db():
         pdf_id INTEGER,
         page_number INTEGER,
         text TEXT,
-        FOREIGN KEY(pdf_id) REFERENCES pdfs(id)
+        FOREIGN KEY(pdf_id) REFERENCES files(id)
     )
     """)
     conn.commit()
