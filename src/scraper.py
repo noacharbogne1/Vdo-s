@@ -4,13 +4,14 @@ import manage_db as db
 import ocr
 
 def test():
-    tests = ["Arrêté n°2024-123",
-    "ARRETE 2020-01",
-    "arrêté 2021-456",
-    "Arrete n2022-789",
-    "Arrêté interprefectoral N°2025 / 33",
-    "A R R E T E "
-]
+    from pypdf import PdfReader
+
+    try:
+        reader = PdfReader("/Users/noacharbogne/Documents/DataJ/Vidéo-surveillance/data/pdfs/recueil-78-2024-100-recueil-des-actes-administratifs.pdf")
+        print(f"{len(reader.pages)} pages détectées")
+    except Exception as e:
+        print(f"Erreur de lecture PDF : {e}")
+
 
 def main():
     db.init_db()

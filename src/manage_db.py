@@ -10,6 +10,7 @@ def init_db():
     CREATE TABLE IF NOT EXISTS files (
         id INTEGER PRIMARY KEY,
         file_name TEXT UNIQUE,
+        path TEXT,
         url TEXT,
         date TEXT,
         pref TEXT

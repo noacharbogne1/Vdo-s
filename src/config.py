@@ -14,7 +14,7 @@ PDF_DIR = "/Users/noacharbogne/Documents/DataJ/Vidéo-surveillance/data/pdfs/"
 TEXT_DIR = "/Users/noacharbogne/Documents/DataJ/Vidéo-surveillance/data/texts/"
 DB_PATH = "/Users/noacharbogne/Documents/DataJ/Vidéo-surveillance/data/raa.db"
 
-# contrôle des différentes parties de la main
+# contrôle des différentes parties du pipeline
 DO_TEST_CODE = False
 DO_GET_JSONS = False
 DO_PROCESS_JSONS = False

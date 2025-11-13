@@ -73,15 +73,16 @@ def process_jsons():
                 data = json.load(f)
                 for element in data.get("elements", []):
                     name = element.get("name")
+                    path = os.path.join(config.PDF_DIR, os.path.basename(urlparse(element.get("url")).path))
                     url = element.get("url")
                     date = element.get("date")
                     prefecture = element.get("administration")[4:]
                     if prefecture == "ris\0":
                         prefecture = "75"
                     c.execute("""
-                        INSERT OR IGNORE INTO files (file_name, url, date, pref)
-                        VALUES (?, ?, ?, ?)
-                    """, (name, url, date, prefecture))
+                        INSERT OR IGNORE INTO files (file_name, path, url, date, pref)
+                        VALUES (?, ?, ?, ?, ?)
+                    """, (name, path, url, date, prefecture))
                     print(f"✅ Métadonnées extraites pour le JSON {filename}, fichier : {name}")
                     conn.commit()
             except Exception as e:
