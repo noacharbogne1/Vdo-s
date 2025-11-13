@@ -35,16 +35,5 @@ def main():
     if config.DO_EXTRACT_TEXT:
         ocr.extraction()
 
-    # 5) pour chaque page : tester la présence de "vidéo-protection"
-    # if config.DO_INTERPRET_TEXT:
-        # utils_interpreter.interprete()
-
-    # 6) exporter les résultats en CSV pour consultation
-    # if config.DO_INTERPRET_TEXT:
-    #     df = pd.DataFrame(records)
-    #     out_csv = "raa_video_protection_results.csv"
-    #     df.to_csv(out_csv, index=False, encoding="utf-8")
-    #     print(f"Terminé — résultats sauvegardés dans {out_csv} ({len(df)} segments).")
-
 if __name__ == "__main__":
     main()
