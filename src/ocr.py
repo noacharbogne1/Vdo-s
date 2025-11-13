@@ -4,15 +4,11 @@ import tempfile
 import ocrmypdf
 import sqlite3
 
-from concurrent.futures import ProcessPoolExecutor, as_completed
-from pdfminer.high_level import extract_text
-from urllib.parse import quote
 import ocrmypdf
 import sqlite3
 from pypdf import PdfReader, PdfWriter
 from pypdf.generic import NameObject, NumberObject
 import ftfy
-import shutil
 
 import config
 import manage_db as db
