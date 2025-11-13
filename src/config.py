@@ -15,9 +15,9 @@ TEXT_DIR = "/Users/noacharbogne/Documents/DataJ/Vidéo-surveillance/data/texts/"
 DB_PATH = "/Users/noacharbogne/Documents/DataJ/Vidéo-surveillance/data/raa.db"
 
 # contrôle des différentes parties du pipeline
-DO_TEST_CODE = False
+DO_TEST_CODE = True
 DO_GET_JSONS = False
 DO_PROCESS_JSONS = False
 DO_DOWNLOAD_PDFS = False
-DO_EXTRACT_TEXT = True
+DO_EXTRACT_TEXT = False
 DO_INTERPRET_TEXT = False

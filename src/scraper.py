@@ -3,14 +3,38 @@ import config
 import manage_db as db
 import ocr
 
+import sqlite3
+from PyPDF2 import PdfReader
 def test():
-    from pypdf import PdfReader
 
-    try:
-        reader = PdfReader("/Users/noacharbogne/Documents/DataJ/Vidéo-surveillance/data/pdfs/recueil-78-2024-100-recueil-des-actes-administratifs.pdf")
-        print(f"{len(reader.pages)} pages détectées")
-    except Exception as e:
-        print(f"Erreur de lecture PDF : {e}")
+    conn = sqlite3.connect(config.DB_PATH)
+    c = conn.cursor()
+
+    c.execute("SELECT id, file_name, path FROM files")
+    pdfs = c.fetchall()
+
+    total = len(pdfs)
+    ok = 0
+    failed = 0
+
+    print(f"--- Test d'ouverture de {total} PDF ---")
+
+    for i, (pdf_id, file_name, path) in enumerate(pdfs, start=1):
+        try:
+            reader = PdfReader(path)
+            # Essai de lire la première page pour valider complètement
+            _ = reader.pages[0]  
+            ok += 1
+            print(f"[{i}/{total}] ✅ OK : {file_name}")
+        except Exception as e:
+            failed += 1
+            print(f"[{i}/{total}] ❌ ERREUR : {file_name} — {e}")
+
+    print("\n--- Résultat final ---")
+    print(f"PDF valides : {ok}/{total}")
+    print(f"PDF corrompus/non lisibles : {failed}/{total}")
+
+    conn.close()
 
 
 def main():
